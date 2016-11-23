@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.18
+FROM ubuntu:14.04
 MAINTAINER Andrew Chumchal(support@andrewchumchal.com)
 
 # Set correct environment variables
@@ -15,6 +15,11 @@ RUN usermod -g 100 nobody
 
 # Use baseimage-docker's init system
 CMD ["/sbin/my_init"]
+
+# Install Dependencies
+RUN  apt-get update \
+  && apt-get install -y wget \
+  && rm -rf /var/lib/apt/lists/*
 
 # Download NeoRouter
 RUN wget -c http://download.neorouter.com/Downloads/NRFree/Update_2.3.1.4360/Linux/Ubuntu/nrclient-2.3.1.4360-free-ubuntu-amd64.deb
