@@ -1,14 +1,15 @@
-FROM docker/whalesay:latest
+FROM phusion/baseimage:0.9.18
 
 MAINTAINER Andrew Chumchal <andrew@andrewchumchal.com>
 
-VOLUME ["/config"]
+# Set correct environment variables
+ENV DEBIAN_FRONTEND="noninteractive" HOME="/root" LC_ALL="C.UTF-8" LANG="en_US.UTF-8" LANGUAGE="en_US.UTF-8"
 
-RUN apt-get -y update \
-	&& apt-get install -y wget
+#Install NeoRouter
+add install.sh /
+RUN bash /install.sh
 
-RUN wget -c http://download.neorouter.com/Downloads/NRFree/Update_2.3.1.4360/Linux/Ubuntu/nrclient-2.3.1.4360-free-ubuntu-amd64.deb 
+volume /config
 
-RUN dpkg -r nrclient
-
-RUN sudo dpkg -i nrclient-2.3.1.4360-free-ubuntu-amd64.deb.deb
+# Use baseimage-docker's init system
+CMD ["/sbin/my_init"]
