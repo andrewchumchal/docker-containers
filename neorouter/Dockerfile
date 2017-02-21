@@ -1,28 +1,13 @@
-FROM ubuntu:14.04
-MAINTAINER Andrew Chumchal(support@andrewchumchal.com)
+FROM docker/whalesay:latest
 
-# Set correct environment variables
-ENV HOME /root
+MAINTAINER Andrew Chumchal <andrew@andrewchumchal.com>
 
-# Ensure UTF-8
-RUN locale-gen en_US.UTF-8
-ENV LANG       en_US.UTF-8
-ENV LC_ALL     en_US.UTF-8
+VOLUME ["/config"]
 
-# Fix a Debianism of the nobody's uid being 65534
-RUN usermod -u 99 nobody
-RUN usermod -g 100 nobody
+RUN apt-get -y update
 
-# Use baseimage-docker's init system
-CMD ["/sbin/my_init"]
+RUN wget -c http://download.neorouter.com/Downloads/NRFree/Update_2.3.1.4360/Linux/Ubuntu/nrclient-2.3.1.4360-free-ubuntu-amd64.deb 
 
-# Install Dependencies
-RUN  apt-get update \
-  && apt-get install -y wget \
-  && rm -rf /var/lib/apt/lists/*
+RUN dpkg -r nrclient
 
-# Download NeoRouter
-RUN wget -c http://download.neorouter.com/Downloads/NRFree/Update_2.3.1.4360/Linux/Ubuntu/nrclient-2.3.1.4360-free-ubuntu-amd64.deb
-
-# Install NeoRouter
-RUN sudo dpkg -i nrclient-2.3.1.4360-free-ubuntu-amd64.deb
+RUN sudo dpkg -i nrclient-2.3.1.4360-free-ubuntu-amd64.deb.deb
